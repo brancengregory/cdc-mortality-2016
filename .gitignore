@@ -1,5 +1,7 @@
-VS16MORT.DUSMCPUB
-VS16MORT.csv
+*.DUSMCPUB
+*.csv
 *.pdf
+*.rds
 .Rproj.user
 .RData
+.Rhistory

@@ -1,8 +1,28 @@
 library(tidyverse)
 
-###Import CDC Data and Set Var Types
-VS16MORT <- read_csv("VS16MORT.csv", col_types = cols(Age_Value = col_integer(),
-                                                      Race = col_integer()))
+# ###Import CDC Data and Set Var Types
+# VS16MORT <- read_csv("VS16MORT.csv", col_types = cols(Age_Value = col_integer(),
+#                                                       Race = col_integer()))
+# 
+# ##List format 2006-2016
+# files <- c()
+# for (i in 6:16) {
+#   if (i <= 9) {
+#     files <- append(files, paste("VS", 0, i, "MORT.csv", sep = ""))
+#   } else {
+#     files <- append(files, paste("VS", i, "MORT.csv", sep = ""))
+#   }
+# }
+# rm(i)
+# 
+# data <- list()
+# for (i in 1:length(files)) {
+#   name <- substr(files[i], 1, 8)
+#   data[[name]] <- read_csv(files[i], col_types = cols(Age_Value = col_integer(),
+#                                                                 Race = col_integer()))
+# }
+
+load()
 
 #grep("^K70", VS16MORT[,"ICD10"][[1]]) %>% length
 #grep("^F10", VS16MORT[,"ICD10"][[1]]) %>% length
