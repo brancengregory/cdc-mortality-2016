@@ -22,7 +22,7 @@ library(tidyverse)
 #                                                                 Race = col_integer()))
 # }
 
-load()
+VS_MORT <- readRDS("VS_MORT.rds")
 
 #grep("^K70", VS16MORT[,"ICD10"][[1]]) %>% length
 #grep("^F10", VS16MORT[,"ICD10"][[1]]) %>% length
@@ -32,21 +32,45 @@ ALC_ICD10 <- c("K70", "F10", "E244", "G312", "G621", "G721", "I426", "K292", "K8
   "K860", "R780", "X45", "X65", "Y15")
 
 ###Index of Obs with Matching Alcohol Related Mortality Causes
-ALC_index <- NULL
-for (i in 1:length(ALC_ICD10)) {
-  ALC_index <- c(ALC_index, grep(paste0("^", ALC_ICD10[i], sep = ""),
-                                 VS16MORT[,"ICD10"][[1]]))
+# ALC_index <- NULL
+# for (i in 1:length(ALC_ICD10)) {
+#   ALC_index <- c(ALC_index, grep(paste0("^", ALC_ICD10[i], sep = ""),
+#                                  VS16MORT[,"ICD10"][[1]]))
+# }
+# ALC_index <- sort(unique(ALC_index))
+# rm(i)
+
+indexALC <- function(x) {
+  result <- NULL
+  ALC_ICD10 <- c("K70", "F10", "E244", "G312", "G621", "G721", "I426", "K292", "K852",
+                 "K860", "R780", "X45", "X65", "Y15")
+  for (i in 1:length(ALC_ICD10)) {
+    result <- c(result, grep(paste0("^", ALC_ICD10[i], sep = ""),
+                             x[, "ICD10"][[1]]))
+  }
+  result <- sort(unique(result))
+  return(result)
 }
-ALC_index <- sort(unique(ALC_index))
-rm(i)
+indices <- lapply(VS_MORT, indexALC)
+
 
 ###Aggregate various Asian races into single group
-for (i in 1:nrow(VS16MORT)) {
-  if (VS16MORT$Race[i]>=4){
-    VS16MORT$Race[i] <- 4
+# for (i in 1:nrow(VS16MORT)) {
+#   if (VS16MORT$Race[i]>=4){
+#     VS16MORT$Race[i] <- 4
+#   }
+# }
+# rm(i)
+
+agg_race <- function(x) {
+  for (i in 1:nrow(x)) {
+    if (x$Race[i]>=4){
+      x$Race[i] <- 4
+    }
   }
+  return(x)
 }
-rm(i)
+VS_MORT <- lapply(VS_MORT, agg_race)
 
 ###Subset of Mortalities Related to Alcohol
 MORT_ALC <- VS16MORT %>%
