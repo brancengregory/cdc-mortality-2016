@@ -252,16 +252,28 @@ density(WHITE_MORT_ALC_AGE[[1]]) %>%
        xlab = "Age",
        ylab = "Percentage")
 grid(nx = 11, ny = 5)
+x <- density(WHITE_MORT_ALC_AGE[[1]])$x
+y <- density(WHITE_MORT_ALC_AGE[[1]])$y
+polygon(c(min(x),x),c(min(y),y), col=rgb(1,0,0,0.2), border = NA)
 density(BLACK_MORT_ALC_AGE[[1]]) %>%
   lines(col="Green", lty=1)
+x <- density(BLACK_MORT_ALC_AGE[[1]])$x
+y <- density(BLACK_MORT_ALC_AGE[[1]])$y
+polygon(c(min(x),x),c(min(y),y), col=rgb(0,1,0,0.2), border = NA)
 density(ASIAN_MORT_ALC_AGE[[1]]) %>%
   lines(col="Purple", lty=1)
+x <- density(ASIAN_MORT_ALC_AGE[[1]])$x
+y <- density(ASIAN_MORT_ALC_AGE[[1]])$y
+polygon(c(min(x),x),c(min(y),y), col=rgb(0.6274510,0.1254902,0.9411765,0.2), border = NA)
 density(AI_MORT_ALC_AGE[[1]]) %>%
   lines(col="Blue")
+x <- density(AI_MORT_ALC_AGE[[1]])$x
+y <- density(AI_MORT_ALC_AGE[[1]])$y
+polygon(c(min(x),x),c(min(y),y), col=rgb(0,0,1,0.2), border = NA)
 axis(2, at = seq(0, 0.05, 0.01), labels = paste(0:5, "%", sep = ""))
 axis(1, at = seq(0, 120, 10))
 legend("topright", legend = c("White", "Black", "Asian", "Native American"),
-       col = c("Red", "Green", "Purple", "Blue"), lty = c(2,2,1,2), bty = "o", xjust = 1,
+       col = c("Red", "Green", "Purple", "Blue"), lty = 1, bty = "o", xjust = 1,
        yjust = 1, text.width = 15)
 
 ######################################
@@ -287,17 +299,23 @@ par(new=T)
 
 density(AI_MALE_MORT_AGE[[1]]) %>%
   plot(xlim=c(0, 110), ylim=c(0, 0.03), yaxs = "i", xaxs = "i", col="Blue", 
-       lty=2, axes=F,
+       lty=1, axes=F,
        main = "Age Distribution of Total Mortality Among \n Native Americans by Sex, 2016",
        xlab = "Age",
        ylab = "Percentage")
+grid(nx = 11, ny = 3)
+x <- density(AI_MALE_MORT_AGE[[1]])$x
+y <- density(AI_MALE_MORT_AGE[[1]])$y
+polygon(c(min(x),x),c(min(y),y), col=rgb(0,0,1,0.2), border = NA)
 density(AI_FEMALE_MORT_AGE[[1]]) %>%
-  lines(col="Green", lty=2)
+  lines(col="Red", lty=1)
+x <- density(AI_FEMALE_MORT_AGE[[1]])$x
+y <- density(AI_FEMALE_MORT_AGE[[1]])$y
+polygon(c(min(x),x),c(min(y),y), col=rgb(1,0,0,0.2), border = NA)
 axis(2, at = seq(0, 0.05, 0.01), labels = paste(0:5, "%", sep = ""))
 axis(1, at = seq(0, 120, 10))
-grid(nx = 11, ny = 5)
 legend("topright", legend = c("Female", "Male"),
-       col = c("Green", "Blue"), lty = c(1,1), bty = "o", xjust = 1,
+       col = c("Red", "Blue"), lty = c(1,1), bty = "o", xjust = 1,
        yjust = 1, text.width = 15)
 
 ################################################
@@ -322,3 +340,4 @@ axis(1, at = seq(0, 120, 10))
 legend("topright", legend = c("Female", "Male"),
        col = c("Red", "Blue"), lty = c(1,1), bty = "o", xjust = 1,
        yjust = 1, text.width = 15)
+

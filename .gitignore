@@ -1,6 +1,6 @@
 *.DUSMCPUB
 *.csv
-*.pdf
+
 *.rds
 *.RData
 .Rproj.user
