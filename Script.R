@@ -87,63 +87,31 @@ MORT_ALC <- VS16MORT %>%
   filter(1:nrow(VS16MORT) %in% ALC_index)
 
 
+# ###Average Mortality Age, All Causes
+# VS16MORT$Age_Value[VS16MORT$Age_Value!=999] %>%
+#   as.numeric() %>%
+#   mean() %>%
+#   abline(v=., col="Blue", lty=2)
+# 
+# ###Average Mortality Age, Alcohol Related
+# MORT_ALC$Age_Value[MORT_ALC$Age_Value!=999] %>%
+#   as.numeric() %>%
+#   mean() %>%
+#   abline(v=., col="Red", lty=2)
 
-###Proportion of Total Mortalities Related to Alcohol, by Race
-(MORT_ALC$Race %>% table / VS16MORT$Race %>% table) %>% 
-  barplot(ylim=c(0,0.08), yaxs = "i", xaxs = "i", axes=F,
-     main = "Proportion of Total Mortalities Related \nto Alcohol by Race, 2016",
-     xlab = "Race",
-     ylab = "Percentage",
-     names.arg = c("", "", "", ""))
-axis(2, at = seq(0, 0.08, 0.01), labels = paste(0:8, "%", sep = ""))
-grid(nx = 0, ny = 16)
-par(new=T)
-(MORT_ALC$Race %>% table / VS16MORT$Race %>% table) %>% 
-  barplot(ylim=c(0,0.08), yaxs = "i", xaxs = "i", axes=F,
-          main = "Proportion of Total Mortalities Related \nto Alcohol by Race, 2016",
-          xlab = "Race",
-          ylab = "Percentage",
-          col = "grey25",
-          names.arg = c("White", "Black", "Native American", "Asian"))
 
-###Age Distribution of Mortality, All Causes
-VS16MORT$Age_Value[VS16MORT$Age_Value!=999] %>%
-  as.numeric() %>%
-  density() %>%
-  plot(ylim=c(0, 0.04), col="Blue", 
-       main = "Distribution of Mortality Age by Cause",
-       xlab = "Age",
-       ylab = "Proportion")
 
-###Age Distribution of Mortality, Alcohol Related
-MORT_ALC$Age_Value[MORT_ALC$Age_Value!=999] %>%
-  as.numeric() %>%
-  density() %>%
-  lines(col="Red")
-
-###Average Mortality Age, All Causes
-VS16MORT$Age_Value[VS16MORT$Age_Value!=999] %>%
-  as.numeric() %>%
-  mean() %>%
-  abline(v=., col="Blue", lty=2)
-
-###Average Mortality Age, Alcohol Related
-MORT_ALC$Age_Value[MORT_ALC$Age_Value!=999] %>%
-  as.numeric() %>%
-  mean() %>%
-  abline(v=., col="Red", lty=2)
-
-###Average Mortality Age, All Causes, by Race
-VS16MORT[VS16MORT$Age_Value!=999,] %>%
-  select(Age_Value, Race) %>%
-  group_by(Race) %>%
-  summarise(avg=mean(Age_Value))
-
-###Average Mortality Age, Alcohol Related, by Race
-MORT_ALC[MORT_ALC$Age_Value!=999,] %>%
-  select(Age_Value, Race) %>%
-  group_by(Race) %>%
-  summarise(avg=mean(Age_Value))
+# ###Average Mortality Age, All Causes, by Race
+# VS16MORT[VS16MORT$Age_Value!=999,] %>%
+#   select(Age_Value, Race) %>%
+#   group_by(Race) %>%
+#   summarise(avg=mean(Age_Value))
+# 
+# ###Average Mortality Age, Alcohol Related, by Race
+# MORT_ALC[MORT_ALC$Age_Value!=999,] %>%
+#   select(Age_Value, Race) %>%
+#   group_by(Race) %>%
+#   summarise(avg=mean(Age_Value))
 
 ###White Subset of Mortality, All Causes
 WHITE_MORT_AGE <- VS16MORT[VS16MORT$Age_Value!=999,] %>%
@@ -165,15 +133,6 @@ ASIAN_MORT_AGE <- VS16MORT[VS16MORT$Age_Value!=999,] %>%
   filter(Race==4) %>%
   select(Age_Value)
 
-###Kernel Density Plot, Age Distribution of Mortality, All Causes, by Race
-density(AI_MORT_AGE[[1]]) %>%
-  plot(ylim=c(0,0.03), col="Blue")
-density(WHITE_MORT_AGE[[1]]) %>%
-  lines(col="Red")
-density(BLACK_MORT_AGE[[1]]) %>%
-  lines(col="Green")
-density(ASIAN_MORT_AGE[[1]]) %>%
-  lines(col="Black")
 
 ###White Subset of Mortality, Alcohol Related
 WHITE_MORT_ALC_AGE <- MORT_ALC[MORT_ALC$Age_Value!=999,] %>%
@@ -195,26 +154,6 @@ ASIAN_MORT_ALC_AGE <- MORT_ALC[MORT_ALC$Age_Value!=999,] %>%
   filter(Race==4) %>%
   select(Age_Value)
 
-###Kernel Density Plot, Age Distribution of Alcohol Related Mortality, by Race
-density(WHITE_MORT_ALC_AGE[[1]]) %>%
-  plot(xlim=c(0, 110), ylim=c(0, 0.05), yaxs = "i", xaxs = "i", col="Blue", 
-       lty=2, axes=F,
-       main = "Age Distribution of Alcohol Related Mortality by Race, 2016",
-       xlab = "Age",
-       ylab = "Percentage")
-density(BLACK_MORT_ALC_AGE[[1]]) %>%
-  lines(col="Green", lty=2)
-density(ASIAN_MORT_ALC_AGE[[1]]) %>%
-  lines(col="Black", lty=2)
-density(AI_MORT_ALC_AGE[[1]]) %>%
-  lines(col="Red")
-axis(2, at = seq(0, 0.05, 0.01), labels = paste(0:5, "%", sep = ""))
-axis(1, at = seq(0, 120, 10))
-grid(nx = 11, ny = 5)
-legend("topright", legend = c("White", "Black", "Native American", "Asian"),
-       col = c("Green", "Blue", "Red", "Black"), lty = c(2,2,1,2), bty = "o", xjust = 1,
-       yjust = 1, text.width = 15)
-
 
 AI_MALE_MORT_AGE <- VS16MORT[VS16MORT$Age_Value!=999,] %>%
   filter(Race==3) %>%
@@ -225,6 +164,126 @@ AI_FEMALE_MORT_AGE <- VS16MORT[VS16MORT$Age_Value!=999,] %>%
   filter(Race==3) %>%
   filter(Sex=="F") %>%
   select(Age_Value)
+
+
+AI_MALE_MORT_ALC_AGE <- MORT_ALC[MORT_ALC$Age_Value!=999,] %>%
+  filter(Race==3) %>%
+  filter(Sex=="M") %>%
+  select(Age_Value)
+
+AI_FEMALE_MORT_ALC_AGE <- MORT_ALC[MORT_ALC$Age_Value!=999,] %>%
+  filter(Race==3) %>%
+  filter(Sex=="F") %>%
+  select(Age_Value)
+
+
+#############################################################################
+#################Graphs#############################
+#####################################
+
+###Age Distribution of Mortality, All Causes
+VS16MORT$Age_Value[VS16MORT$Age_Value!=999] %>%
+  as.numeric() %>%
+  density() %>%
+  plot(xlim=c(0, 120), ylim=c(0, 0.04), col="Blue", 
+       main = "Distribution of Mortality Age by Cause, 2016",
+       xlab = "Age",
+       ylab = "Proportion",
+       axes = F,
+       yaxs = "i", xaxs = "i")
+axis(2, at = seq(0, 0.04, 0.01), labels = paste(0:4, "%", sep = ""))
+axis(1, at = seq(0, 120, 10))
+grid(nx = 12, ny = 4)
+###Age Distribution of Mortality, Alcohol Related
+MORT_ALC$Age_Value[MORT_ALC$Age_Value!=999] %>%
+  as.numeric() %>%
+  density() %>%
+  lines(col="Red")
+x <- density(as.numeric(VS16MORT$Age_Value[VS16MORT$Age_Value!=999]))$x
+y <- density(as.numeric(VS16MORT$Age_Value[VS16MORT$Age_Value!=999]))$y
+polygon(c(min(x),x),c(min(y),y), col=rgb(0,0,1,0.5), border = NA)
+x <- density(as.numeric(MORT_ALC$Age_Value[MORT_ALC$Age_Value!=999]))$x
+y <- density(as.numeric(MORT_ALC$Age_Value[MORT_ALC$Age_Value!=999]))$y
+polygon(c(min(x),x),c(min(y),y), col=rgb(1,0,0,0.5), border = NA)
+legend("topright", legend = c("All Causes", "Alcohol Related"),
+       col = c("Blue", "Red"), lty = c(1,1), bty = "o", xjust = 1,
+       yjust = 1, text.width = 15)
+
+#############################################
+###Kernel Density Plot, Age Distribution of Mortality, All Causes, by Race
+density(WHITE_MORT_AGE[[1]]) %>%
+  plot(xlim=c(0,110), ylim=c(0,0.03), col="Red",
+       main = "Age Distribution of Mortality, All Causes, by Race, 2016",
+       xlab = "Age",
+       ylab = "Proportion",
+       axes = F,
+       yaxs = "i", xaxs = "i")
+grid(nx = 11, ny = 4)
+x <- density(WHITE_MORT_AGE[[1]])$x
+y <- density(WHITE_MORT_AGE[[1]])$y
+polygon(c(min(x),x),c(min(y),y), col=rgb(1,0,0,0.2), border = NA)
+density(BLACK_MORT_AGE[[1]]) %>%
+  lines(col="Green")
+x <- density(BLACK_MORT_AGE[[1]])$x
+y <- density(BLACK_MORT_AGE[[1]])$y
+polygon(c(min(x),x),c(min(y),y), col=rgb(0,1,0,0.2), border = NA)
+density(ASIAN_MORT_AGE[[1]]) %>%
+  lines(col="Purple")
+x <- density(ASIAN_MORT_AGE[[1]])$x
+y <- density(ASIAN_MORT_AGE[[1]])$y
+polygon(c(min(x),x),c(min(y),y), col=rgb(0.6274510,0.1254902,0.9411765,0.2), border = NA)
+density(AI_MORT_AGE[[1]]) %>%
+  lines(col="Blue")
+x <- density(AI_MORT_AGE[[1]])$x
+y <- density(AI_MORT_AGE[[1]])$y
+polygon(c(min(x),x),c(min(y),y), col=rgb(0,0,1,0.2), border = NA)
+axis(2, at = seq(0, 0.03, 0.01), labels = paste(0:3, "%", sep = ""))
+axis(1, at = seq(0, 110, 10))
+legend("topleft", legend = c("White", "Black", "Asian", "Native American"),
+       col = c("Red", "Green", "Purple", "Blue"), lty = 1, bty = "o", xjust = 1,
+       yjust = 1, text.width = 10, ncol = 2)
+
+###############################################
+###Kernel Density Plot, Age Distribution of Alcohol Related Mortality, by Race
+density(WHITE_MORT_ALC_AGE[[1]]) %>%
+  plot(xlim=c(0, 110), ylim=c(0, 0.05), yaxs = "i", xaxs = "i", col="Red", 
+       lty=1, axes=F,
+       main = "Age Distribution of Alcohol Related Mortality by Race, 2016",
+       xlab = "Age",
+       ylab = "Percentage")
+grid(nx = 11, ny = 5)
+density(BLACK_MORT_ALC_AGE[[1]]) %>%
+  lines(col="Green", lty=1)
+density(ASIAN_MORT_ALC_AGE[[1]]) %>%
+  lines(col="Purple", lty=1)
+density(AI_MORT_ALC_AGE[[1]]) %>%
+  lines(col="Blue")
+axis(2, at = seq(0, 0.05, 0.01), labels = paste(0:5, "%", sep = ""))
+axis(1, at = seq(0, 120, 10))
+legend("topright", legend = c("White", "Black", "Asian", "Native American"),
+       col = c("Red", "Green", "Purple", "Blue"), lty = c(2,2,1,2), bty = "o", xjust = 1,
+       yjust = 1, text.width = 15)
+
+######################################
+###Proportion of Total Mortalities Related to Alcohol, by Race
+(MORT_ALC$Race %>% table / VS16MORT$Race %>% table) %>% 
+  barplot(ylim=c(0,0.08), yaxs = "i", xaxs = "i", axes=F,
+          main = "Proportion of Total Mortalities Related \nto Alcohol by Race, 2016",
+          xlab = "Race",
+          ylab = "Percentage",
+          names.arg = c("", "", "", ""))
+axis(2, at = seq(0, 0.08, 0.01), labels = paste(0:8, "%", sep = ""))
+grid(nx = 0, ny = 16)
+par(new=T)
+(MORT_ALC$Race %>% table / VS16MORT$Race %>% table) %>% 
+  barplot(ylim=c(0,0.08), yaxs = "i", xaxs = "i", axes=F,
+          main = "Proportion of Total Mortalities Related \nto Alcohol by Race, 2016",
+          xlab = "Race",
+          ylab = "Percentage",
+          col = "grey25",
+          names.arg = c("White", "Black", "Native American", "Asian"))
+
+############################################
 
 density(AI_MALE_MORT_AGE[[1]]) %>%
   plot(xlim=c(0, 110), ylim=c(0, 0.03), yaxs = "i", xaxs = "i", col="Blue", 
@@ -241,33 +300,25 @@ legend("topright", legend = c("Female", "Male"),
        col = c("Green", "Blue"), lty = c(1,1), bty = "o", xjust = 1,
        yjust = 1, text.width = 15)
 
-
-
-AI_MALE_MORT_ALC_AGE <- MORT_ALC[MORT_ALC$Age_Value!=999,] %>%
-  filter(Race==3) %>%
-  filter(Sex=="M") %>%
-  select(Age_Value)
-
-AI_FEMALE_MORT_ALC_AGE <- MORT_ALC[MORT_ALC$Age_Value!=999,] %>%
-  filter(Race==3) %>%
-  filter(Sex=="F") %>%
-  select(Age_Value)
+################################################
 
 density(AI_MALE_MORT_ALC_AGE[[1]]) %>%
   plot(xlim=c(0, 110), ylim=c(0, 0.04), yaxs = "i", xaxs = "i", col="Blue", 
-       lty=2, axes=F,
+       lty=1, axes=F,
        main = "Age Distribution of Alcohol Related Mortality Among \n Native Americans by Sex, 2016",
        xlab = "Age",
        ylab = "Percentage")
+grid(nx = 11, ny = 4)
+x <- density(AI_MALE_MORT_ALC_AGE[[1]])$x
+y <- density(AI_MALE_MORT_ALC_AGE[[1]])$y
+polygon(c(min(x),x),c(min(y),y), col=rgb(0,0,1,0.3), border = NA)
 density(AI_FEMALE_MORT_ALC_AGE[[1]]) %>%
-  lines(col="Green", lty=2)
+  lines(col="Red", lty=1)
+x <- density(AI_FEMALE_MORT_ALC_AGE[[1]])$x
+y <- density(AI_FEMALE_MORT_ALC_AGE[[1]])$y
+polygon(c(min(x),x),c(min(y),y), col=rgb(1,0,0,0.3), border = NA)
 axis(2, at = seq(0, 0.05, 0.01), labels = paste(0:5, "%", sep = ""))
 axis(1, at = seq(0, 120, 10))
-grid(nx = 11, ny = 4)
 legend("topright", legend = c("Female", "Male"),
-       col = c("Green", "Blue"), lty = c(1,1), bty = "o", xjust = 1,
+       col = c("Red", "Blue"), lty = c(1,1), bty = "o", xjust = 1,
        yjust = 1, text.width = 15)
-
-
-
-
