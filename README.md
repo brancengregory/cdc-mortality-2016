@@ -1,6 +1,8 @@
 # cdc-mortality-2016
 Analysis of Alcohol Related Deaths in the CDC Mortality Report for 2016
 
+*** NON-AGE-ADJUSTED ***
+
 ![Distribution of Mortality Age by Cause, 2016](/images/plot1.jpeg)
 
 ![Distribution of Mortality Age, All Causes, by Race, 2016](/images/plot2.jpeg)
