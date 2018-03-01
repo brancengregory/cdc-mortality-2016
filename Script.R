@@ -1,7 +1,10 @@
 library(tidyverse)
+library(RColorBrewer)
+
+cols <- RColorBrewer::brewer.pal(4, "Set1")
 
 ###Import CDC Data and Set Var Types
-VS16MORT <- read_csv("VS16MORT.csv", col_types = cols(Age_Value = col_integer(),
+VS16MORT <- read_csv("data/VS16MORT.csv", col_types = cols(Age_Value = col_integer(),
                                                       Race = col_integer()))
 
 # ##List format 2006-2016
@@ -304,7 +307,7 @@ par(new=T)
 ############################################
 
 density(AI_MALE_MORT_AGE[[1]]) %>%
-  plot(xlim=c(0, 110), ylim=c(0, 0.03), yaxs = "i", xaxs = "i", col="Blue", 
+  plot(xlim=c(0, 110), ylim=c(0, 0.03), yaxs = "i", xaxs = "i", col=sex_col[n], 
        lty=1, axes=F,
        main = "Age Distribution of Total Mortality Among \n Native Americans by Sex, 2016",
        xlab = "Age",
@@ -312,7 +315,7 @@ density(AI_MALE_MORT_AGE[[1]]) %>%
 grid(nx = 11, ny = 3)
 x <- density(AI_MALE_MORT_AGE[[1]])$x
 y <- density(AI_MALE_MORT_AGE[[1]])$y
-polygon(c(min(x),x),c(min(y),y), col=rgb(0,0,1,0.3), border = NA)
+polygon(c(min(x),x),c(min(y),y), col=col2rgb(sex_col[n])[[1]]/255, border = NA)
 density(AI_FEMALE_MORT_AGE[[1]]) %>%
   lines(col="Red", lty=1)
 x <- density(AI_FEMALE_MORT_AGE[[1]])$x
@@ -321,7 +324,7 @@ polygon(c(min(x),x),c(min(y),y), col=rgb(1,0,0,0.3), border = NA)
 axis(2, at = seq(0, 0.05, 0.01), labels = paste(0:5, "%", sep = ""))
 axis(1, at = seq(0, 120, 10))
 legend("topright", legend = c("Female", "Male"),
-       col = c("Red", "Blue"), lty = c(1,1), bty = "o", xjust = 1,
+       col = c(sex_col[1], sex_col[n]), lty = c(1,1), bty = "o", xjust = 1,
        yjust = 1, text.width = 15)
 
 ################################################
@@ -455,4 +458,195 @@ for (i in 1:4) {
   }
 }
 
+
+#####################################
+Bridged_Race_Population <- read_delim("~/Downloads/Bridged-Race Population Estimates 1990-2016 (1).txt",
+                                      "\t", escape_double = FALSE, trim_ws = TRUE)
+
+
+Bridged_Race_Population %>%
+  filter(.$Notes=="Total") %>%
+  filter(.$`Race Code`=="2054-5") %>%
+  select(Population) %>%
+  .[[1]] %>%
+  as.numeric() %>%
+  (function(x){x/sum(x)}) %>%
+  plot(ylim=c(0, 0.03), type="l", col="magenta")
+par(new=T)
+Bridged_Race_Population %>%
+  filter(.$Notes=="Total") %>%
+  filter(.$`Race Code`=="2106-3") %>%
+  select(Population) %>%
+  .[[1]] %>%
+  as.numeric() %>%
+  (function(x){x/sum(x)}) %>%
+  plot(ylim=c(0, 0.03), type="l", col="green")
+par(new=T)
+Bridged_Race_Population %>%
+  filter(.$Notes=="Total") %>%
+  filter(.$`Race Code`=="A-PI") %>%
+  select(Population) %>%
+  .[[1]] %>%
+  as.numeric() %>%
+  (function(x){x/sum(x)}) %>%
+  plot(ylim=c(0, 0.03), type="l", col="black")
+par(new=T)
+Bridged_Race_Population %>%
+  filter(.$Notes=="Total") %>%
+  filter(.$`Race Code`=="1002-5") %>%
+  select(Population) %>%
+  .[[1]] %>%
+  as.numeric() %>%
+  (function(x){x/sum(x)}) %>%
+  plot(ylim=c(0,0.03), type="l", col="cyan")
+
+Bridged_Race_Population %>%
+  filter(.$`Gender Code`=="F") %>%
+  filter(.$`Race Code`=="2054-5") %>%
+  select(Population) %>%
+  .[[1]] %>%
+  as.numeric() %>%
+  (function(x){x/sum(x)}) %>%
+  plot(ylim=c(0, 0.03), type="l", col="magenta")
+par(new=T)
+Bridged_Race_Population %>%
+  filter(.$`Gender Code`=="F") %>%
+  filter(.$`Race Code`=="2106-3") %>%
+  select(Population) %>%
+  .[[1]] %>%
+  as.numeric() %>%
+  (function(x){x/sum(x)}) %>%
+  plot(ylim=c(0, 0.03), type="l", col="green")
+par(new=T)
+Bridged_Race_Population %>%
+  filter(.$`Gender Code`=="F") %>%
+  filter(.$`Race Code`=="A-PI") %>%
+  select(Population) %>%
+  .[[1]] %>%
+  as.numeric() %>%
+  (function(x){x/sum(x)}) %>%
+  plot(ylim=c(0, 0.03), type="l", col="black")
+par(new=T)
+Bridged_Race_Population %>%
+  filter(.$`Gender Code`=="F") %>%
+  filter(.$`Race Code`=="1002-5") %>%
+  select(Population) %>%
+  .[[1]] %>%
+  as.numeric() %>%
+  (function(x){x/sum(x)}) %>%
+  plot(ylim=c(0,0.03), type="l", col="cyan")
+
+Bridged_Race_Population %>%
+  filter(.$`Gender Code`=="M") %>%
+  filter(.$`Race Code`=="2054-5") %>%
+  select(Population) %>%
+  .[[1]] %>%
+  as.numeric() %>%
+  (function(x){x/sum(x)}) %>%
+  plot(ylim=c(0, 0.03), type="l", col=cols[1])
+par(new=T)
+Bridged_Race_Population %>%
+  filter(.$`Gender Code`=="M") %>%
+  filter(.$`Race Code`=="2106-3") %>%
+  select(Population) %>%
+  .[[1]] %>%
+  as.numeric() %>%
+  (function(x){x/sum(x)}) %>%
+  plot(ylim=c(0, 0.03), type="l", col=cols[2])
+par(new=T)
+Bridged_Race_Population %>%
+  filter(.$`Gender Code`=="M") %>%
+  filter(.$`Race Code`=="A-PI") %>%
+  select(Population) %>%
+  .[[1]] %>%
+  as.numeric() %>%
+  (function(x){x/sum(x)}) %>%
+  plot(ylim=c(0, 0.03), type="l", col=cols[3])
+par(new=T)
+Bridged_Race_Population %>%
+  filter(.$`Gender Code`=="M") %>%
+  filter(.$`Race Code`=="1002-5") %>%
+  select(Population) %>%
+  .[[1]] %>%
+  as.numeric() %>%
+  (function(x){x/sum(x)}) %>%
+  plot(ylim=c(0,0.03), type="l", col=cols[4])
+
+############
+
+test <- Bridged_Race_Population %>%
+  filter(.$`Gender Code`=="F") %>%
+  filter(.$`Race Code`=="1002-5") %>%
+  filter(!.$`Age Code`=="0") %>%
+  filter(!.$`Age Code`==">85") %>%
+  select(Population) %>%
+  .[[1]]
+
+test2 <- Bridged_Race_Population %>%
+  filter(.$`Gender Code`=="F") %>%
+  filter(.$`Race Code`=="1002-5") %>%
+  filter(!.$`Age Code`=="0") %>%
+  filter(!.$`Age Code`==">85") %>%
+  select(Population) %>%
+  .[[1]] %>%
+  (function(x){x/sum(x)})
+
+AI_FEMALE_MORT_AGE %>%
+  filter(.$Age_Value<85) %>%
+  .[[1]] %>%
+  as.numeric() %>%
+  table() %>%
+  (function(x){x/test}) %>%
+  plot()
+
+AI_FEMALE_MORT_AGE %>%
+  filter(.$Age_Value<85) %>%
+  .[[1]] %>%
+  as.numeric() %>%
+  table() %>%
+  (function(x){x/test}) %>%
+  (function(x){x*test2*1000}) %>%
+  plot()
+
+###############
+
+test <- Bridged_Race_Population %>%
+  filter(.$`Gender Code`=="F") %>%
+  filter(.$`Race Code`=="2054-5") %>%
+  filter(!.$`Age Code`=="0") %>%
+  filter(!.$`Age Code`==">85") %>%
+  select(Population) %>%
+  .[[1]]
+
+test2 <- Bridged_Race_Population %>%
+  filter(.$`Gender Code`=="F") %>%
+  filter(.$`Race Code`=="2054-5") %>%
+  filter(!.$`Age Code`=="0") %>%
+  filter(!.$`Age Code`==">85") %>%
+  select(Population) %>%
+  .[[1]] %>%
+  (function(x){x/sum(x)})
+
+
+BLACK_FEMALE_MORT_AGE <- VS16MORT[VS16MORT$Age_Value!=999,] %>%
+  filter(Race==2) %>%
+  filter(Sex=="F") %>%
+  select(Age_Value)
+
+BLACK_FEMALE_MORT_AGE %>%
+  filter(.$Age_Value<85) %>%
+  .[[1]] %>%
+  as.numeric() %>%
+  table() %>%
+  (function(x){x/test}) %>%
+  plot()
+
+BLACK_FEMALE_MORT_AGE %>%
+  filter(.$Age_Value<85) %>%
+  .[[1]] %>%
+  as.numeric() %>%
+  table() %>%
+  (function(x){x/test}) %>%
+  (function(x){x*test2*1000}) %>%
+  plot()
 
