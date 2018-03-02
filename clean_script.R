@@ -138,7 +138,7 @@ legend("topright", legend = c("All Causes", "Alcohol Related"),
        yjust = 1, text.width = 15)
 
 ####Total Mortality Rate, All Races####
-x1 <- MORT_16 %>%
+mort_total_by_age <- MORT_16 %>%
   filter(is.na(.$AGE_GROUP)==F) %>%
   select(AGE_GROUP) %>%
   .[[1]] %>%
@@ -146,18 +146,18 @@ x1 <- MORT_16 %>%
   table() %>%
   as.numeric()
 
-x2 <- Bridged_Race_Pop_16 %>%
+pop_total_by_age <- Bridged_Race_Pop_16 %>%
   filter(.$Notes == "Total" & (is.na(Race) == T) & (is.na(`Age Group`)==F)) %>%
   select(Population) %>%
   .[[1]] %>%
   as.numeric()
 
-y1 <- x1/x2
-plot(y1, type = "l")
-plot(log(y1), type = "l")
+mort_rate_total_by_age <- mort_total_by_age/pop_total_by_age
+plot(mort_rate_total_by_age, type = "l")
+plot(log(mort_rate_total_by_age), type = "l")
 
 ####Alcohol Related Mortality Rate####
-x3 <- MORT_16 %>%
+mort_alc_by_age <- MORT_16 %>%
   filter(isALC == 1) %>%
   filter(is.na(.$AGE_GROUP)==F) %>%
   select(AGE_GROUP) %>%
@@ -165,22 +165,51 @@ x3 <- MORT_16 %>%
   as.numeric() %>%
   table() %>%
   as.numeric()
-x3 <- c(x3[1:2], 0, 0, x3[3:length(x3)])
+mort_alc_by_age <- c(mort_alc_by_age[1:2], 0, 0, mort_alc_by_age[3:length(mort_alc_by_age)])
 
-y2 <- x3/x2
-plot(y2, type = "l")
-plot(log(y2), type = "l")
+mort_alc_rate_by_age <- mort_alc_by_age/pop_total_by_age
+plot(mort_alc_rate_by_age, type = "l")
+plot(log(mort_alc_rate_by_age), type = "l")
 
-y7 <- x3/x1
-plot(y7, type = "l")
-plot(log(y7), type = "l")
-
-####Alcohol Share of Total Mortality####
-z1 <- y2/y1
-plot(z1, type = "l")
+####Share of Alcohol Related Deaths in Total Mortality, by Age
+prop_alc_mort_by_age <- mort_alc_by_age/mort_total_by_age
+plot(prop_alc_mort_by_age, type = "l")
+plot(log(prop_alc_mort_by_age), type = "l")
 
 
 ####Kernel Density Plot, Age Distribution of Mortality, All Causes, by Race####
+MORT_16 %>%
+  filter(is.na(.$AGE_GROUP)==F) %>%
+  filter(.$Race_Recode_5==1) %>%
+  select(AGE_GROUP) %>%
+  .[[1]] %>%
+  as.numeric() %>%
+  hist(probability = T, xlim = c(5,20), ylim =c(0,0.4), col = race_col[1])
+par(new=T)
+MORT_16 %>%
+  filter(is.na(.$AGE_GROUP)==F) %>%
+  filter(.$Race_Recode_5==2) %>%
+  select(AGE_GROUP) %>%
+  .[[1]] %>%
+  as.numeric() %>%
+  hist(probability = T, xlim = c(5,20), ylim =c(0,0.4), col = race_col[2])
+par(new=T)
+MORT_16 %>%
+  filter(is.na(.$AGE_GROUP)==F) %>%
+  filter(.$Race_Recode_5==3) %>%
+  select(AGE_GROUP) %>%
+  .[[1]] %>%
+  as.numeric() %>%
+  hist(probability = T, xlim = c(5,20), ylim =c(0,0.4), col = race_col[3])
+par(new=T)
+MORT_16 %>%
+  filter(is.na(.$AGE_GROUP)==F) %>%
+  filter(.$Race_Recode_5==4) %>%
+  select(AGE_GROUP) %>%
+  .[[1]] %>%
+  as.numeric() %>%
+  hist(probability = T, xlim = c(5,20), ylim =c(0,0.4), col = race_col[4])
+
 density(WHITE_MORT_AGE[[1]]) %>%
   plot(xlim=c(0,110), ylim=c(0,0.03), col="Red",
        main = "Age Distribution of Mortality, All Causes, by Race, 2016",
@@ -215,6 +244,42 @@ legend("topleft", legend = c("White", "Black", "Asian", "Native American"),
 
 
 ####Kernel Density Plot, Age Distribution of Alcohol Related Mortality, by Race####
+MORT_16 %>%
+  filter(is.na(.$AGE_GROUP)==F) %>%
+  filter(.$Race_Recode_5==1) %>%
+  filter(.$isALC==1) %>%
+  select(AGE_GROUP) %>%
+  .[[1]] %>%
+  as.numeric() %>%
+  hist(probability = T, xlim = c(5,20), ylim =c(0,0.3), col = race_col[1])
+par(new=T)
+MORT_16 %>%
+  filter(is.na(.$AGE_GROUP)==F) %>%
+  filter(.$Race_Recode_5==2) %>%
+  filter(.$isALC==1) %>%
+  select(AGE_GROUP) %>%
+  .[[1]] %>%
+  as.numeric() %>%
+  hist(probability = T, xlim = c(5,20), ylim =c(0,0.3), col = race_col[2])
+par(new=T)
+MORT_16 %>%
+  filter(is.na(.$AGE_GROUP)==F) %>%
+  filter(.$Race_Recode_5==3) %>%
+  filter(.$isALC==1) %>%
+  select(AGE_GROUP) %>%
+  .[[1]] %>%
+  as.numeric() %>%
+  hist(probability = T, xlim = c(5,20), ylim =c(0,0.3), col = race_col[3])
+par(new=T)
+MORT_16 %>%
+  filter(is.na(.$AGE_GROUP)==F) %>%
+  filter(.$Race_Recode_5==4) %>%
+  filter(.$isALC==1) %>%
+  select(AGE_GROUP) %>%
+  .[[1]] %>%
+  as.numeric() %>%
+  hist(probability = T, xlim = c(5,20), ylim =c(0,0.3), col = race_col[4])
+
 density(WHITE_MORT_ALC_AGE[[1]]) %>%
   plot(xlim=c(0, 110), ylim=c(0, 0.05), yaxs = "i", xaxs = "i", col="Red", 
        lty=1, axes=F,
@@ -248,7 +313,7 @@ legend("topright", legend = c("White", "Black", "Asian", "Native American"),
 
 
 ####Mortatlity Rate, All Causes, by Age Group and Race####
-x4 <- MORT_16 %>%
+white_mort_total_by_age <- MORT_16 %>%
   filter(is.na(AGE_GROUP)==F) %>%
   filter(Race_Recode_5==1) %>%
   select(AGE_GROUP) %>%
@@ -257,14 +322,14 @@ x4 <- MORT_16 %>%
   table() %>%
   as.numeric
 
-x5 <- Bridged_Race_Pop_16 %>%
-  filter(Race=="White") %>%
+white_pop_total_by_age <- Bridged_Race_Pop_16 %>%
+  filter(`Race Code`=="2106-3") %>%
   filter(Notes=="Total") %>%
   select(Population) %>%
   .[[1]] %>%
   as.numeric()
 
-x6 <- MORT_16 %>%
+black_mort_total_by_age <- MORT_16 %>%
   filter(is.na(AGE_GROUP)==F) %>%
   filter(Race_Recode_5==2) %>%
   select(AGE_GROUP) %>%
@@ -273,14 +338,14 @@ x6 <- MORT_16 %>%
   table() %>%
   as.numeric
 
-x7 <- Bridged_Race_Pop_16 %>%
+black_pop_total_by_age <- Bridged_Race_Pop_16 %>%
   filter(`Race Code`=="2054-5") %>%
   filter(Notes=="Total") %>%
   select(Population) %>%
   .[[1]] %>%
   as.numeric()
 
-x8 <- MORT_16 %>%
+ai_mort_total_by_age <- MORT_16 %>%
   filter(is.na(AGE_GROUP)==F) %>%
   filter(Race_Recode_5==3) %>%
   select(AGE_GROUP) %>%
@@ -289,14 +354,14 @@ x8 <- MORT_16 %>%
   table() %>%
   as.numeric
 
-x9 <- Bridged_Race_Pop_16 %>%
+ai_pop_total_by_age <- Bridged_Race_Pop_16 %>%
   filter(`Race Code`=="1002-5") %>%
   filter(Notes=="Total") %>%
   select(Population) %>%
   .[[1]] %>%
   as.numeric()
 
-x10 <- MORT_16 %>%
+asian_mort_total_by_age <- MORT_16 %>%
   filter(is.na(AGE_GROUP)==F) %>%
   filter(Race_Recode_5==4) %>%
   select(AGE_GROUP) %>%
@@ -305,25 +370,25 @@ x10 <- MORT_16 %>%
   table() %>%
   as.numeric
 
-x11 <- Bridged_Race_Pop_16 %>%
+asian_pop_total_by_age <- Bridged_Race_Pop_16 %>%
   filter(`Race Code`=="A-PI") %>%
   filter(Notes=="Total") %>%
   select(Population) %>%
   .[[1]] %>%
   as.numeric()
 
-y3 <- x4/x5
-y4 <- x6/x7
-y5 <- x8/x9
-y6 <- x10/x11
-plot(y3, type = "l")
-lines(y4, col="blue")
-lines(y5, col="red")
-lines(y6, col="green")
-plot(log(y3), type = "l")
-lines(log(y4), col="blue")
-lines(log(y5), col="red")
-lines(log(y6), col="green")
+white_mort_rate_total_by_age <- white_mort_total_by_age/white_pop_total_by_age
+black_mort_rate_total_by_age <- black_mort_total_by_age/black_pop_total_by_age
+ai_mort_rate_total_by_age <- ai_mort_total_by_age/ai_pop_total_by_age
+asian_mort_rate_total_by_age <- asian_mort_total_by_age/asian_pop_total_by_age
+plot(white_mort_rate_total_by_age, type = "l")
+lines(black_mort_rate_total_by_age, col="blue")
+lines(ai_mort_rate_total_by_age, col="red")
+lines(asian_mort_rate_total_by_age, col="green")
+plot(log(white_mort_rate_total_by_age), type = "l")
+lines(log(black_mort_rate_total_by_age), col="blue")
+lines(log(ai_mort_rate_total_by_age), col="red")
+lines(log(asian_mort_rate_total_by_age), col="green")
 
 
 ####Mortality Rate, Alcohol Related, by Age Group and Race####
