@@ -17,6 +17,6 @@ library(RColorBrewer)
 ## Results
 
 
-##Footnotes
+## Footnotes
 1. <span id="f1"></span>The CDC uses bridged race categories for their mortality data. For more information on race-bridging, [see here](https://www.cdc.gov/nchs/nvss/bridged_race.htm). [$\hookleftarrow$](#a1)
 2. <span id="f2"></span>Age-adjustment is crucial when tracking how a population's mortality rate changes over time, or when comparing two different populations, as in each case the age distribution of the population may be a significant contributing factor to mean differences. For more information on age-adjustment, [see here](https://www.cdc.gov/nchs/data/statnt/statnt06rv.pdf). [$\hookleftarrow$](#a2)
