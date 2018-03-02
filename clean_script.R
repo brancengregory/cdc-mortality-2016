@@ -154,6 +154,7 @@ x2 <- Bridged_Race_Pop_16 %>%
 
 y1 <- x1/x2
 plot(y1, type = "l")
+plot(log(y1), type = "l")
 
 ####Alcohol Related Mortality Rate####
 x3 <- MORT_16 %>%
@@ -168,6 +169,11 @@ x3 <- c(x3[1:2], 0, 0, x3[3:length(x3)])
 
 y2 <- x3/x2
 plot(y2, type = "l")
+plot(log(y2), type = "l")
+
+y7 <- x3/x1
+plot(y7, type = "l")
+plot(log(y7), type = "l")
 
 ####Alcohol Share of Total Mortality####
 z1 <- y2/y1
@@ -314,6 +320,95 @@ plot(y3, type = "l")
 lines(y4, col="blue")
 lines(y5, col="red")
 lines(y6, col="green")
+plot(log(y3), type = "l")
+lines(log(y4), col="blue")
+lines(log(y5), col="red")
+lines(log(y6), col="green")
 
 
+####Mortality Rate, Alcohol Related, by Age Group and Race####
+x12 <- MORT_16 %>%
+  filter(is.na(AGE_GROUP)==F) %>%
+  filter(Race_Recode_5==1) %>%
+  filter(isALC==1) %>%
+  select(AGE_GROUP) %>%
+  .[[1]] %>%
+  as.numeric() %>%
+  table() %>%
+  as.numeric
+x12 <- c(x12[1:2], 0, 0, x12[3:length(x12)])
 
+x13 <- MORT_16 %>%
+  filter(is.na(AGE_GROUP)==F) %>%
+  filter(Race_Recode_5==2) %>%
+  filter(isALC==1) %>%
+  select(AGE_GROUP) %>%
+  .[[1]] %>%
+  as.numeric() %>%
+  table() %>%
+  as.numeric
+x13 <- c(0,0,0,0,x13[1:length(x13)])
+
+x14 <- MORT_16 %>%
+  filter(is.na(AGE_GROUP)==F) %>%
+  filter(Race_Recode_5==3) %>%
+  filter(isALC==1) %>%
+  select(AGE_GROUP) %>%
+  .[[1]] %>%
+  as.numeric() %>%
+  table() %>%
+  as.numeric
+x14 <- c(0,0,0,0,x14[1:length(x14)])
+
+x15 <- MORT_16 %>%
+  filter(is.na(AGE_GROUP)==F) %>%
+  filter(Race_Recode_5==4) %>%
+  filter(isALC==1) %>%
+  select(AGE_GROUP) %>%
+  .[[1]] %>%
+  as.numeric() %>%
+  table() %>%
+  as.numeric
+x15 <- c(0,0,0,0,x15[1:length(x15)])
+
+y8 <- x12/x5
+y9 <- x13/x7
+y10 <- x14/x9
+y11 <- x15/x11
+plot(y10, type = "l", col="red")
+lines(y8)
+lines(y9, col="blue")
+lines(y11, col="green")
+plot(log(y10), type = "l", col="red", ylim = c(-20,-7))
+lines(log(y8), type = "l")
+lines(log(y9), col="blue")
+lines(log(y11), col="green")
+
+
+####Age-Adjusted Total Mortality Rate, All Age Groups, by Race; Standard Population: 2016####
+x16 <- (x2*y3)
+x17 <- (x2*y4)
+x18 <- (x2*y5)
+x19 <- (x2*y6)
+y12 <- sum(x16)/Bridged_Race_Pop_16$Population[248]
+y13 <- sum(x17)/Bridged_Race_Pop_16$Population[248]
+y14 <- sum(x18)/Bridged_Race_Pop_16$Population[248]
+y15 <- sum(x19)/Bridged_Race_Pop_16$Population[248]
+
+####Age-Adjusted Total Mortality Rate, All Age Groups, by Race; Standard Population: 2016####
+x20 <- (x2*y8)
+x21 <- (x2*y9)
+x22 <- (x2*y10)
+x23 <- (x2*y11)
+y16 <- sum(x20)/Bridged_Race_Pop_16$Population[248]
+y17 <- sum(x21)/Bridged_Race_Pop_16$Population[248]
+y18 <- sum(x22)/Bridged_Race_Pop_16$Population[248]
+y19 <- sum(x23)/Bridged_Race_Pop_16$Population[248]
+
+z2 <- y16/y12
+z3 <- y17/y13
+z4 <- y18/y14
+z5 <- y19/y15
+
+test <- c(z2, z3, z4, z5)
+barplot(test, ylim = c(0, 0.06))
