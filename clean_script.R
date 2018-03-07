@@ -86,7 +86,7 @@ MORT_16 %>%
   plot(xlim=c(0, 120), ylim=c(0, 0.04), col="Blue", 
        main = "Distribution of Mortality Age by Cause, 2016",
        xlab = "Age",
-       ylab = "Proportion",
+       ylab = "Percentage",
        axes = F,
        yaxs = "i", xaxs = "i")
 axis(2, at = seq(0, 0.04, 0.01), labels = paste(0:4, "%", sep = ""))
@@ -115,7 +115,7 @@ y <- MORT_16 %>%
   as.numeric() %>%
   density() %>%
   (function(x){x$y})
-polygon(c(min(x),x),c(min(y),y), col=add.alpha(sex_col[2], 0.3), border = NA)
+polygon(c(min(x),x),c(min(y),y), col=add.alpha(sex_col[2], 0.4), border = NA)
 x <- MORT_16 %>%
   filter(isALC == 1) %>%
   filter(.$Age_Value < 999) %>%
@@ -132,7 +132,22 @@ y <- MORT_16 %>%
   as.numeric() %>%
   density() %>%
   (function(x){x$y})
-polygon(c(min(x),x),c(min(y),y), col=add.alpha(sex_col[1], 0.3), border = NA)
+polygon(c(min(x),x),c(min(y),y), col=add.alpha(sex_col[1], 0.4), border = NA)
+abline(v = mean(MORT_16 %>%
+                  filter(.$Age_Value < 999) %>%
+                  select(Age_Value) %>%
+                  .[[1]] %>%
+                  as.numeric()),
+       lty = 2,
+       col = "Blue")
+abline(v = mean(MORT_16 %>%
+                  filter(.$isALC == 1) %>%
+                  filter(.$Age_Value < 999) %>%
+                  select(Age_Value) %>%
+                  .[[1]] %>%
+                  as.numeric()),
+       lty = 2,
+       col = "Red")
 legend("topright", legend = c("All Causes", "Alcohol Related"),
        col = c("Blue", "Red"), lty = c(1,1), bty = "o", xjust = 1,
        yjust = 1, text.width = 15)
@@ -153,7 +168,7 @@ pop_total_by_age <- Bridged_Race_Pop_16 %>%
   as.numeric()
 
 mort_rate_total_by_age <- mort_total_by_age/pop_total_by_age
-plot(mort_rate_total_by_age, type = "l")
+plot(mort_rate_total_by_age, type = "b")
 plot(log(mort_rate_total_by_age), type = "l")
 
 ####Alcohol Related Mortality Rate####
@@ -392,7 +407,7 @@ lines(log(asian_mort_rate_total_by_age), col="green")
 
 
 ####Mortality Rate, Alcohol Related, by Age Group and Race####
-x12 <- MORT_16 %>%
+white_mort_alc_by_age <- MORT_16 %>%
   filter(is.na(AGE_GROUP)==F) %>%
   filter(Race_Recode_5==1) %>%
   filter(isALC==1) %>%
@@ -401,9 +416,9 @@ x12 <- MORT_16 %>%
   as.numeric() %>%
   table() %>%
   as.numeric
-x12 <- c(x12[1:2], 0, 0, x12[3:length(x12)])
+white_mort_alc_by_age <- c(white_mort_alc_by_age[1:2], 0, 0, white_mort_alc_by_age[3:length(white_mort_alc_by_age)])
 
-x13 <- MORT_16 %>%
+black_mort_alc_by_age <- MORT_16 %>%
   filter(is.na(AGE_GROUP)==F) %>%
   filter(Race_Recode_5==2) %>%
   filter(isALC==1) %>%
@@ -412,9 +427,9 @@ x13 <- MORT_16 %>%
   as.numeric() %>%
   table() %>%
   as.numeric
-x13 <- c(0,0,0,0,x13[1:length(x13)])
+black_mort_alc_by_age <- c(0,0,0,0,black_mort_alc_by_age[1:length(black_mort_alc_by_age)])
 
-x14 <- MORT_16 %>%
+ai_mort_alc_by_age <- MORT_16 %>%
   filter(is.na(AGE_GROUP)==F) %>%
   filter(Race_Recode_5==3) %>%
   filter(isALC==1) %>%
@@ -423,9 +438,9 @@ x14 <- MORT_16 %>%
   as.numeric() %>%
   table() %>%
   as.numeric
-x14 <- c(0,0,0,0,x14[1:length(x14)])
+ai_mort_alc_by_age <- c(0,0,0,0,ai_mort_alc_by_age[1:length(ai_mort_alc_by_age)])
 
-x15 <- MORT_16 %>%
+asian_mort_alc_by_age <- MORT_16 %>%
   filter(is.na(AGE_GROUP)==F) %>%
   filter(Race_Recode_5==4) %>%
   filter(isALC==1) %>%
@@ -434,46 +449,53 @@ x15 <- MORT_16 %>%
   as.numeric() %>%
   table() %>%
   as.numeric
-x15 <- c(0,0,0,0,x15[1:length(x15)])
+asian_mort_alc_by_age <- c(0,0,0,0,asian_mort_alc_by_age[1:length(asian_mort_alc_by_age)])
 
-y8 <- x12/x5
-y9 <- x13/x7
-y10 <- x14/x9
-y11 <- x15/x11
-plot(y10, type = "l", col="red")
-lines(y8)
-lines(y9, col="blue")
-lines(y11, col="green")
-plot(log(y10), type = "l", col="red", ylim = c(-20,-7))
-lines(log(y8), type = "l")
-lines(log(y9), col="blue")
-lines(log(y11), col="green")
+white_mort_rate_alc_by_age <- white_mort_alc_by_age/white_pop_total_by_age
+black_mort_rate_alc_by_age <- black_mort_alc_by_age/black_pop_total_by_age
+ai_mort_rate_alc_by_age <- ai_mort_alc_by_age/ai_pop_total_by_age
+asian_mort_rate_alc_by_age <- asian_mort_alc_by_age/asian_pop_total_by_age
+plot(white_mort_rate_alc_by_age, type = "l", col="red")
+lines(black_mort_rate_alc_by_age)
+lines(ai_mort_rate_alc_by_age, col="blue")
+lines(asian_mort_rate_alc_by_age, col="green")
+plot(log(white_mort_rate_alc_by_age), type = "l", col="red", ylim = c(-20,-7))
+lines(log(black_mort_rate_alc_by_age), type = "l")
+lines(log(ai_mort_rate_alc_by_age), col="blue")
+lines(log(asian_mort_rate_alc_by_age), col="green")
 
-
-####Age-Adjusted Total Mortality Rate, All Age Groups, by Race; Standard Population: 2016####
-x16 <- (x2*y3)
-x17 <- (x2*y4)
-x18 <- (x2*y5)
-x19 <- (x2*y6)
-y12 <- sum(x16)/Bridged_Race_Pop_16$Population[248]
-y13 <- sum(x17)/Bridged_Race_Pop_16$Population[248]
-y14 <- sum(x18)/Bridged_Race_Pop_16$Population[248]
-y15 <- sum(x19)/Bridged_Race_Pop_16$Population[248]
 
 ####Age-Adjusted Total Mortality Rate, All Age Groups, by Race; Standard Population: 2016####
-x20 <- (x2*y8)
-x21 <- (x2*y9)
-x22 <- (x2*y10)
-x23 <- (x2*y11)
-y16 <- sum(x20)/Bridged_Race_Pop_16$Population[248]
-y17 <- sum(x21)/Bridged_Race_Pop_16$Population[248]
-y18 <- sum(x22)/Bridged_Race_Pop_16$Population[248]
-y19 <- sum(x23)/Bridged_Race_Pop_16$Population[248]
+std_white_mort_total_by_age <- (pop_total_by_age*white_mort_rate_total_by_age)
+std_black_mort_total_by_age <- (pop_total_by_age*black_mort_rate_total_by_age)
+std_ai_mort_total_by_age <- (pop_total_by_age*ai_mort_rate_total_by_age)
+std_asian_mort_total_by_age <- (pop_total_by_age*asian_mort_rate_total_by_age)
+adj_white_mort_rate_total_by_age <- sum(std_white_mort_total_by_age)/Bridged_Race_Pop_16$Population[248]
+adj_black_mort_rate_total_by_age <- sum(std_black_mort_total_by_age)/Bridged_Race_Pop_16$Population[248]
+adj_ai_mort_rate_total_by_age <- sum(std_ai_mort_total_by_age)/Bridged_Race_Pop_16$Population[248]
+adj_asian_mort_rate_total_by_age <- sum(std_asian_mort_total_by_age)/Bridged_Race_Pop_16$Population[248]
 
-z2 <- y16/y12
-z3 <- y17/y13
-z4 <- y18/y14
-z5 <- y19/y15
+####Age-Adjusted Alcohol Mortality Rate, All Age Groups, by Race; Standard Population: 2016####
+std_white_mort_alc_by_age <- (pop_total_by_age*white_mort_rate_alc_by_age)
+std_black_mort_alc_by_age <- (pop_total_by_age*black_mort_rate_alc_by_age)
+std_ai_mort_alc_by_age <- (pop_total_by_age*ai_mort_rate_alc_by_age)
+std_asian_mort_alc_by_age <- (pop_total_by_age*asian_mort_rate_alc_by_age)
+adj_white_mort_rate_alc_by_age <- sum(std_white_mort_alc_by_age)/Bridged_Race_Pop_16$Population[248]
+adj_black_mort_rate_alc_by_age <- sum(std_black_mort_alc_by_age)/Bridged_Race_Pop_16$Population[248]
+adj_ai_mort_rate_alc_by_age <- sum(std_ai_mort_alc_by_age)/Bridged_Race_Pop_16$Population[248]
+adj_asian_mort_rate_alc_by_age <- sum(std_asian_mort_alc_by_age)/Bridged_Race_Pop_16$Population[248]
 
-test <- c(z2, z3, z4, z5)
-barplot(test, ylim = c(0, 0.06))
+####Age-Adjusted Proportion of Alcohol Mortality to Total Mortality, by Race; Standard Population: 2016####
+adj_white_prop_alc_mort_by_age <- adj_white_mort_rate_alc_by_age/adj_white_mort_rate_total_by_age
+adj_black_prop_alc_mort_by_age <- adj_black_mort_rate_alc_by_age/adj_black_mort_rate_total_by_age
+adj_ai_prop_alc_mort_by_age <- adj_ai_mort_rate_alc_by_age/adj_ai_mort_rate_total_by_age
+adj_asian_prop_alc_mort_by_age <- adj_asian_mort_rate_alc_by_age/adj_asian_mort_rate_total_by_age
+
+test <- c(adj_white_prop_alc_mort_by_age, adj_black_prop_alc_mort_by_age, adj_ai_prop_alc_mort_by_age, adj_asian_prop_alc_mort_by_age)
+barplot(test, ylim = c(0, 0.06), names.arg = c("White", "Black", "Native American", "Asian"), main = "Age-Adjusted Share of Alcohol Related Deaths\nin Total Mortality, by Race, 2016",
+        col = c(race_col[3],race_col[2],race_col[1],race_col[4]),
+        axes = F,
+        xlab = "Race",
+        ylab = "Percentage")
+axis(2, at=seq(0,0.06,0.01), labels = c("0%", "1%", "2%", "3%", "4%", "5%", "6%"))
+
